@@ -1,0 +1,160 @@
+{\rtf1\ansi\ansicpg1252\deff0\nouicompat\deflang1033\deflangfe1033{\fonttbl{\f0\froman\fprq2\fcharset0 Times New Roman;}}
+{\*\generator Riched20 10.0.19041}{\*\mmathPr\mdispDef1\mwrapIndent1440 }\viewkind4\uc1 
+\pard\nowidctlpar\sl276\slmult1\f0\fs32\lang9 Project for C753: Identify Fraud from Enron Emails\par
+By Logan Burke\par
+\fs20 September 10, 2021\fs32\par
+\fs24\par
+
+\pard\nowidctlpar Question 1:\par
+
+\pard\nowidctlpar\sa200\sl276\slmult1 Summarize the goal of this project and how machine learning is useful in accomplishing it. \par
+\tab The goal of this is to use machine learning skills to create an algorithm that can predict whether an Enron employee may have committed fraud based on the public Enron data and financials. Using machine learning techniques will allow for more granular searching for causation that might escape from a normal human observation of the dataset. This is an advantage that machine learning has over humans; combing through tons of data checking the math for causality is generally beyond the scope of people. Thus, this impartial and detailed checking for correlation that this project require is perfect for programming a machine learning algorithm. As background for the dataset, this excerpt from the Project Overview is useful. \par
+
+\pard\nowidctlpar\li720\ri1440\sa200\sl276\slmult1 In 2000, Enron was one of the largest companies in the United States. By 2002, it had collapsed into bankruptcy due to widespread corporate fraud. In the resulting Federal investigation, a significant amount of typically confidential information entered into the public record, including tens of thousands of emails and detailed financial data for top executives. In this project, you will play detective, and put your new skills to use by building a person of interest identifier based on financial and email data made public as a result of the Enron scandal. To assist you in your detective work, we've combined this data with a hand-generated list of persons of interest in the fraud case, which means individuals who were indicted, reached a settlement or plea deal with the government, or testified in exchange for prosecution immunity.\par
+
+\pard\nowidctlpar\sl276\slmult1\tab The dataset is a pickle file, and has 18 individuals marked as POI, with 128 individuals marked as non-POI, for a total of 146 individuals in the dataset. There are 21 features in the dataset, with the following amounts of NaN entries per feature:\par
+\par
+
+\pard\nowidctlpar\li1440  'bonus': 64,\par
+ 'deferral_payments': 107,\par
+ 'deferred_income': 97,\par
+ 'director_fees': 129,\par
+ 'email_address': 35,\par
+ 'exercised_stock_options': 44,\par
+ 'expenses': 51,\par
+ 'from_messages': 60,\par
+ 'from_poi_to_this_person': 60,\par
+ 'from_this_person_to_poi': 60,\par
+ 'loan_advances': 142,\par
+ 'long_term_incentive': 80,\par
+ 'other': 53,\par
+ 'poi': 0,\par
+ 'restricted_stock': 36,\par
+ 'restricted_stock_deferred': 128,\par
+ 'salary': 51,\par
+ 'shared_receipt_with_poi': 60,\par
+ 'to_messages': 60,\par
+ 'total_payments': 21,\par
+ 'total_stock_value': 20\par
+\par
+
+\pard\nowidctlpar\sa200\sl276\slmult1\tab There are also 68 negative entries in the data, 1 in deferred payments, 49 in deferred income, 1 in restricted stock, 16 in restricted stock deferred, and 1 in total stock value. As far as was able to be understood, these values could be accurate, as these items could have a negative value associated with them. \par
+\tab The quality of the dataset was good, there were only some outliers and some bad data that had to be dealt with that were found. All entries for Eugene Lockhart, and an individual or business called "The Travel Agency in the Park" were completely removed, as they had too much missing data to be useful. The TOTAL entry was also removed due to its lack of usefulness for this project. Looking at the tester.py code, it was decided that NaN values in the entries of financial features could be changed to a value of 0 without affecting the goals of this project.\par
+
+\pard\nowidctlpar\sl276\slmult1 Question 2: \par
+Attempt to create your own feature and test it. It does not have to be included in the final algorithm. \par
+\par
+
+\pard\nowidctlpar\sa200\sl276\slmult1\tab From the course material, the idea of creating two features to calculate as a fraction the numbers of messages to a POI and from a POI would be useful features to add. The addition of these features should lend some useful insights as it is suspected that emails would be one of the primary means that the POIs would use to communicate with each other to plan how and where to pull off their fraud, as well as to protect one another. This could be seen as a gang mentality; they want to make sure that each member is doing what they should and as well as make sure that each member felt vested by being "watched over" by the other members to keep their secrets safe from non-members. This is why it is worthwhile to check the ratios of messages sent and received. So the ratio of messages sent from a POI to someone else would be calculated as "from_poi_to_this_person" / "to_messages" = "fraction_from_poi" and then "from_this_person_to_poi" / "from_messages" = "fraction_to_poi" would hopefully paint a picture of how communication between individuals of interest are happening and help the algorithm find patterns of interest. I also wanted to check the ration of "expenses" / "salary" = "expenses_per_salary" as I thought this might prove useful. Checking the data of the created features looked correct after examining it, and its impact on the final algorithm was observed as follows: \par
+
+\pard\nowidctlpar\sl276\slmult1\tab\tab Final Algorithm without the engineered features tested for performance:\par
+\tab\tab Accuracy-\tab 0.805\par
+\tab\tab Precision-\tab 0.341\par
+\tab\tab Recall-\tab\tab 0.288\par
+\tab\tab F1-\tab  \tab 0.312\par
+\tab\tab F2-\tab\tab 0.297\par
+\par
+\tab\tab Final Algorithm with engineered features performance:\par
+\tab\tab Accuracy-\tab 0.838\par
+\tab\tab Precision-\tab 0.472\par
+\tab\tab Recall-\tab\tab 0.427\par
+\tab\tab F1-\tab  \tab 0.448\par
+\tab\tab F2-\tab\tab 0.435\par
+\par
+Question 3: \par
+
+\pard\nowidctlpar\sa200\sl276\slmult1 What algorithms were tried? What was the model performance of them?\par
+\tab After looking at tester.py the choice of testing the following three algorithm models which were the GaussianNB, the KNeighborsClassifier and the DecisionTreeClassifier. Looking to base the criteria on the same as tester.py, the metrics would be the same as for the grading using accuracy, precision, recall, F1 and F2. Using default parameters and all features to find baselines for which model would be used going forward, these results were found:\par
+
+\pard\nowidctlpar\li1440\sl276\slmult1 GaussianNB\par
+Accuracy: 0.73900\tab\par
+Precision: 0.22604\tab\par
+Recall: 0.39500\tab\par
+F1: 0.28753\tab\par
+
+\pard\nowidctlpar\li1440\sa200\sl276\slmult1 F2: 0.34363 \par
+
+\pard\nowidctlpar\li1440\sl276\slmult1 KNeighborsClassifier\par
+Accuracy: 0.87920\tab\par
+Precision: 0.65461\tab\par
+Recall: 0.19900\tab\par
+F1: 0.30521\tab\par
+
+\pard\nowidctlpar\li1440\sa200\sl276\slmult1 F2: 0.23118\par
+
+\pard\nowidctlpar\li1440\sl276\slmult1 DecisionTreeClassifier\par
+Accuracy: 0.81720\tab\par
+Precision: 0.31225\tab\par
+Recall: 0.30850\tab\par
+F1: 0.31036\tab\par
+
+\pard\nowidctlpar\li1440\sa200\sl276\slmult1 F2: 0.30924\par
+
+\pard\nowidctlpar\sa200\sl276\slmult1\tab There were 1500 total predictions made by each, and after running each multiple times, it was found that generally DecisionTreeClassifier preformed best and will be used as the model going forward for the rest of the project as tuning is begun. No scaled features were preformed. \par
+
+\pard\nowidctlpar\sl276\slmult1 Question 4:\par
+What features were selected and why?\par
+\par
+\tab The final features that were selected were "bonus", "other", "expenses", "fraction_from_poi", "expenses_per_salary", "shared_receipt_with_poi". This was done using the mutual_info_classif to find a measure for the mutual dependence between variables. This was fed into the SelectKBest to help determine which features more consistently showed their importance for scoring highest for F1 and F2. Here are the raw scores sorted in descending order:\par
+
+\pard\nowidctlpar\li1440\sl276\slmult1  0.07108 -'bonus'\par
+ 0.0695 -'expenses'\par
+ 0.0647 -'other'\par
+ 0.0642 -'fraction_to_poi'\par
+ 0.0520 -'shared_receipt_with_poi'\par
+ 0.0478 -'expenses_per_salary'\par
+ 0.0427 -'exercised_stock_options'\par
+ 0.0424 -'total_stock_value'\par
+ 0.0365 -'restricted_stock'\par
+ 0.0310 -'fraction_from_poi'\par
+ 0.0270 -'salary'\par
+ 0.0143 -'deferral_payments'\par
+ 0.0103 -'total_payments'\par
+ 0.0077 -'from_this_person_to_poi'\par
+ 0.0076 -'restricted_stock_deferred'\par
+ 0.0007 -'deferred_income'\par
+ 0.0002 -'to_messages'\par
+ 0.0 \tab -'long_term_incentive'\par
+ 0.0 \tab -'loan_advances'\par
+ 0.0 \tab -'from_poi_to_this_person'\par
+ 0.0 \tab -'from_messages'\par
+ 0.0 \tab -'director_fees'\tab  \par
+\par
+
+\pard\nowidctlpar\sl276\slmult1\tab After running the algorithm multiple times and looking over the trends of the scores(as they would tend to fluctuate due to the nature of the methods), the selection of the final features was completed using a score cut off point of 0.45 for inclusion in the final algorithm. \par
+\par
+Question 5:\par
+What does it mean to tune the parameters and what happens if you do not do this well? What tuning was done for the final algorithm?\par
+\tab\par
+\tab Tuning parameters means to change the settings iteratively to see which parameters produce the best results in performance of the algorithm. It is a process of optimizing for the specific evaluation metrics that are being tested for. In this case, that would be accuracy, precision, recall and the resulting F1 and F2 scores. If this tuning process is not handled effectively, it can mean poor results, long processing times and potential misclassifications of the data through the machine learning algorithm. Thus, tuning is vital for an effective algorithm. \par
+\par
+\tab Tuning for the final algorithm was done iteratively, using trial and error, and then checking with additional tuning using GridSearchCV with SelectKBest. Seeking to optimize the F1 score was the goal, with a secondary goal of optimizing for the F2 score as this was what the final grade would be tested against. \par
+\tab\par
+\tab Testing with different feature selections was done, along with different splitting criterion, to find the best parameters. For DecisionTreeClassifier, it was found that the splitting criteria of entropy worked best over the gini criteria. It was also tested using different levels of  feature selection cut off scores, first trying a cutoff score of 0.2 and then going as high as 0.6 before finding that the best would be a score of 0.45 and higher only being allowed in the final algorithm. This was run multiple times to observe the results, and over time and testing it was found that the features that tended to preform best were added to the final_features list and that the best min_sample_split value was 6 after testing sample splits of 2 all the way up to 20. Use of these parameters and features would consistently yield the results that were being sought. \par
+\par
+Question 6:\par
+What algorithm did you end up using? What features were selected?\par
+\par
+\tab The final algorithm was the DecisionTreeClassifier set to use entropy for splitting and a minimum of 6 samples were used. The features that were used, due to their tending to producing the best results over multiple running of the algorithm, were "bonus", "other", "expenses", "fraction_from_poi", "expenses_per_salary", "shared_receipt_with_poi". \par
+\par
+\par
+Question 7:\par
+What is validation, and what is a classic mistake if you do it wrong? How did you validate your analysis for this project?\par
+\par
+\tab Validation is the verification of results based on a predicted method and is done by maintaining an independence between the inputs used for training and the inputs that are used for actually testing of those methods used for the final analysis. If the dataset used for training and for testing are mixed, the results can be overfitted which would cause metrics to be too high for any real world dataset used in the future due to the model learning specific fluctuation of the training data or noise in said data as the actual end results of what the algorithm should be learning, tainting its process and causing it to misinterpret the data of independent datasets. This weakens the use of the algorithm for real world problem solving. \par
+\par
+\tab Validation of this project\rquote s algorithm was done by using the k-fold cross validation from the tester.py as this was the method that would be used for grading and made the most sense for the scope of this project. \par
+\par
+Question 8:\par
+Give at least 2 evaluation metrics and your average performance for each of them. Explain an interpretation of your metrics that says something human-understandable about your algorithm\rquote s performance.\par
+\par
+
+\pard\nowidctlpar\fi720\sl276\slmult1 After running the algorithm multiple times, the testing results tended to have an accuracy of about 83 percent, a precision score of about 47 percent, and a recall score of about 46 percent. This would translate into about an F1 score of about .45 and an F2 score of about .44 which was observed. This means that the algorithm would have a correct positive predictions about 47 percent of the time (a precision of 47%), and that correct positive prediction classification would be about 46 percent of all the potentially positive predictions (a recall of 46%), which could be useful for helping to identify potential fraud in another company similar to Enron. \par
+
+\pard\nowidctlpar\sl276\slmult1\par
+Summary of Project:\par
+\par
+\tab This project looked at a dataset from the Enron data and its financials that were publicly available, using machine learning skills to create an algorithm to predict whether an employee may have committed fraud. This was an interesting project that brought up good questions and lead to some great learning outcomes. Going forward, using the machine learning skills acquired from this project will lead to more insightful observations with future projects. \par
+\par
+}
+ 

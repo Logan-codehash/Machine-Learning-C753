@@ -1,0 +1,337 @@
+This text file is intended to document various issues related to the
+	Udacity coursework and project for C753: Machine Learning.
+	I'm writing this up in order to save *anyone* else the several hours of
+		trial-and-error experience I was forced to gain.
+	Also, I'm human, you're human, it's nice to help people.
+
+-
+
+Attempting to use Python 2.7 for coursework:
+
+First, course instructions direct students to use Python 2.7 and to make use
+  of a git repo for miniprojects and final project code:
+  https://github.com/udacity/ud120-projects.git
+
+Unfortunately, there are some issues with that repo's package requirements.
+  requirements.txt:
+    nltk==3.2.1
+    numpy==1.11.2
+    scikit-learn==0.18
+    scipy==0.18.1
+
+Given these required packages, and given my use of Windows, attempting to set
+  up an Anaconda environment resulted in conflicts: two cannot be installed for
+  a Python 2.7 environment, and the other two are unavailable via Anaconda
+  repositories for a windows 64-bit OS. Attempting to install these via 'pip'
+  resulted in somewhat complicated dependency issues (long, long error
+  messages) which appear to be related to Python 2.7 deprecation.
+
+I'm sure that setting up a Python 2.7 Anaconda environment with these packages
+  used to be trivial. but the best I could manage due to dependencies for other
+  packages and conflicts was:
+    nltk          3.2.1
+    numpy         1.16.6
+    scikit-learn  0.20.3
+    scipy         1.2.1
+
+For reference, here's the total output of 'conda list' for that environment,
+  which includes all packages installed as dependencies for those listed just
+  now:
+  # packages in environment at C:\tools\Anaconda3\envs\py27:
+  #
+  # Name                    Version                   Build  Channel
+  backports                 1.0                pyhd3eb1b0_2
+  backports.functools_lru_cache 1.6.1          pyhd3eb1b0_0
+  backports_abc             0.5                        py_1
+  blas                      1.0                         mkl
+  ca-certificates           2021.1.19            haa95532_0
+  certifi                   2020.6.20          pyhd3eb1b0_3
+  cycler                    0.10.0           py27h59acbbf_0
+  freetype                  2.9.1                h4d385ea_1
+  functools32               3.2.3.2                  py27_1
+  futures                   3.3.0                    py27_0
+  icc_rt                    2019.0.0             h0cc432a_1
+  icu                       58.2                 h2aa20d9_1
+  intel-openmp              2020.2                      254
+  jpeg                      9b                   ha175dff_2
+  kiwisolver                1.1.0            py27hc56fc5f_0
+  libpng                    1.6.37               h7a46e7a_0
+  matplotlib                2.2.3            py27h263d877_0
+  mkl                       2020.2                      256
+  mkl-service               2.3.0            py27h0b88c2a_0
+  mkl_fft                   1.0.15           py27h44c1dab_0
+  nltk                      3.2.1                    pypi_0    pypi
+  numpy                     1.16.6           py27hcd21bde_0
+  numpy-base                1.16.6           py27hb1d0314_0
+  openssl                   1.0.2u               h0c8e037_0
+  pip                       19.3.1                   py27_0
+  pyparsing                 2.4.7              pyhd3eb1b0_0
+  pyqt                      5.6.0            py27h6e61f57_6
+  python                    2.7.18               hfb89ab9_0
+  python-dateutil           2.8.1              pyhd3eb1b0_0
+  pytz                      2021.1             pyhd3eb1b0_0
+  qt                        5.6.2            vc9hc26998b_12
+  scikit-learn              0.20.3           py27hf381715_0
+  scipy                     1.2.1            py27h4c3ab11_0
+  setuptools                44.0.0                   py27_0
+  singledispatch            3.4.0.3                 py_1001
+  sip                       4.18.1           py27hc56fc5f_2
+  six                       1.15.0             pyhd3eb1b0_0
+  sqlite                    3.30.1               h0c8e037_0
+  tornado                   5.1.1            py27h0c8e037_0
+  vc                        9                    h7299396_1
+  vs2008_runtime            9.00.30729.1         hfaea7d5_1
+  wheel                     0.36.2             pyhd3eb1b0_0
+  wincertstore              0.2              py27hf04cefb_0
+  zlib                      1.2.11               h3cc03e0_3
+
+This setup permitted completion of some small portion of the course's material,
+  but by the time I got along to a portion which made generation of
+  plot-windows via matplotlib necessary, popup-window	generation via 'qt'
+  failed, and my patience ran out.
+
+Maybe those matplotlib.pyplot.show() call errors were related to the versions
+  of pyqt or qt and how they interacted with the IDEs I tried (Sublime, VScode,
+  and I'll beg you to believe that I set up their environment usage correctly
+  and have used either for many, many projects), maybe the version for sip,
+  maybe any number of combinations of dependencies interacting via functools32
+  backport from Python 3.2 to 2.7, since functools32 was deemed	necessary by
+  the environment dependency solver.
+
+I'm sure much of the final project for the course can be completed with a
+  Python 2.7 base, and that any number of workarounds may exist for the kinds
+  of errors I encountered. Troubleshooting package dependency issues does not
+  appeal to me, though, and that kind of effort is necessarily outside the
+  scope of the course's material.
+
+After exploring Udacity's "Knowledge" Q&As, I came across one contracted
+  mentor/project reviewer repeatedly answering questions about Python 2.7
+  issues with his own issue and personal solution: since macOS Big Sur does not
+  support Pthon 2.7 at all, anymore, he's made his own *unofficial* update to
+  the project's codebase in order to grade students' work:
+    https://medium.com/udacity-course-companion/detecting-enron-fraud-in-macos-big-sur-edd2309f7389
+    https://github.com/oforero/ud120-projects/tree/python-3.8
+
+This seemed like a good starting point for attempting to complete the
+  coursework and project with a newer version of Python, as contributors to
+  that repo have been updating the code to reflect changes in the libraries
+  involved, mitigating a wide variety of issues cited in Udacity "Knowledge"
+  questions.
+
+Of course, there were still some issues with the packages used in that project,
+  as well. He suggests creating a Python 3.8 Anaconda environment by way of
+  'python-3.8.yaml', a specification file which can be used in this manner:
+    'conda env create environments/python-3.8.yaml'
+
+Unfortunately, that syntax failed for my system/OS, and I had to use:
+  'conda env create f=python-3.8.yaml'
+(directly from 'environments' directory of the cloned repo in this case, a path
+  for the file could be passed to 'f=')
+
+At that point, environment creation failed due to these packages not being
+  available for windows 64-bit systems via Anaconda repositories:
+    libcxx=10.0.0
+    libedit=3.1.20191231
+    libffi=3.3
+    libgfortran=3.0.1
+    llvm-openmp=10.0.0
+    ncurses=6.2
+    readline=8.0
+That makes sense, given what some of those are. Removing those lines from
+  python-3.8.yaml, a wide variety of package conflicts resulted, but those were
+  mitigated by further removal of these lines:
+    mkl=2019.4
+    pip=20.3.3
+    wheel=0.36.2
+
+Removing specs for pip and wheel are basically optional, but I couldn't see any
+  immediate harm from doing so, and following those changes, the environment
+  could be created successfully via python-3.8.yaml.
+Testing a	miniproject script that relies on generating matplotlib.pyplot.show()
+  windows	resulted in successful execution, anyway.
+
+For reference, here's the total output of 'conda list' for that environment:
+  # packages in environment at C:\tools\Anaconda3\envs\py38:
+  #
+  # Name                    Version                   Build  Channel
+  backcall                  0.2.0              pyhd3eb1b0_0
+  blas                      1.0                         mkl
+  ca-certificates           2021.1.19            haa95532_0
+  certifi                   2020.12.5        py38haa95532_0
+  click                     7.1.2              pyhd3eb1b0_0
+  colorama                  0.4.4              pyhd3eb1b0_0
+  cycler                    0.10.0                   py38_0
+  decorator                 4.4.2              pyhd3eb1b0_0
+  freetype                  2.10.4               hd328e21_0
+  icc_rt                    2019.0.0             h0cc432a_1
+  icu                       58.2                 ha925a31_3
+  intel-openmp              2019.4                      245
+  ipykernel                 5.3.4            py38h5ca1d4c_0
+  ipython                   7.18.1                   py38_0    esri
+  ipython_genutils          0.2.0              pyhd3eb1b0_1
+  jedi                      0.16.0                   py38_0    esri
+  joblib                    1.0.0              pyhd3eb1b0_0
+  jpeg                      9b                   hb83a4c4_2
+  jupyter_client            6.1.7                      py_0    esri
+  jupyter_core              4.6.3                    py38_2    esri
+  kiwisolver                1.3.0            py38hd77b12b_0
+  lcms2                     2.11                 hc51a39a_0
+  libpng                    1.6.37               h2a8f88b_0
+  libsodium                 1.0.18                        1    esri
+  libtiff                   4.1.0                h56a325e_1
+  lz4-c                     1.9.2                hf4a77e7_3
+  matplotlib                3.3.2                haa95532_0
+  matplotlib-base           3.3.2            py38hba9282a_0
+  mkl                       2020.2                      256
+  mkl-service               2.3.0            py38h196d8e1_0
+  mkl_fft                   1.2.0            py38h45dec08_0
+  mkl_random                1.1.1            py38h47e9c7a_0
+  nltk                      3.5                        py_0
+  numpy                     1.19.2           py38hadc3359_0
+  numpy-base                1.19.2           py38ha3acd2a_0
+  olefile                   0.46                       py_0
+  openssl                   1.1.1i               h2bbff1b_0    esri
+  pandas                    1.1.5            py38hf11a4ad_0
+  parso                     0.8.1              pyhd3eb1b0_0
+  pickleshare               0.7.5           pyhd3eb1b0_1003
+  pillow                    8.0.1            py38h4fa10fc_0
+  pip                       20.3.3           py38haa95532_0
+  prompt_toolkit            3.0.5                      py_0    esri
+  pygments                  2.7.0                      py_0    esri
+  pyparsing                 2.4.7              pyhd3eb1b0_0
+  pyqt                      5.9.2            py38ha925a31_4
+  python                    3.8.5                h5fd99cc_1
+  python-dateutil           2.8.1              pyhd3eb1b0_0
+  pytz                      2020.4             pyhd3eb1b0_0
+  pyzmq                     19.0.2                   py38_1    esri
+  qt                        5.9.7            vc14h73c81de_0
+  regex                     2020.11.13       py38h2bbff1b_0
+  scikit-learn              0.23.2           py38h47e9c7a_0
+  scipy                     1.5.2            py38h14eb087_0
+  seaborn                   0.11.1             pyhd3eb1b0_0
+  setuptools                51.0.0           py38haa95532_2
+  sip                       4.19.13          py38ha925a31_0
+  six                       1.15.0           py38haa95532_0
+  sqlite                    3.33.0               h2a8f88b_0
+  threadpoolctl             2.1.0              pyh5ca1d4c_0
+  tk                        8.6.10               he774522_0
+  tornado                   6.1              py38h2bbff1b_0
+  tqdm                      4.56.0             pyhd3eb1b0_0
+  traitlets                 5.0.5              pyhd3eb1b0_0
+  vc                        14.2                 h21ff451_1
+  vs2015_runtime            14.27.29016          h5e58377_2
+  wcwidth                   0.2.5                      py_0
+  wheel                     0.36.2             pyhd3eb1b0_0
+  wincertstore              0.2                      py38_0
+  xz                        5.2.5                h62dcd97_0
+  zeromq                    4.3.2                         2    esri
+  zlib                      1.2.11               h62dcd97_4
+  zstd                      1.4.5                h04227a9_0
+
+Let it be known that nltk is not specified in python-3.8.yaml, and that it
+  and these dependencies were installed separately:
+    nltk    3.5
+    click   7.1.2
+    regex   2020.11.13
+    tqdm    4.56.0
+
+nltk is used in coursework as part of Lesson 11 - Text Learning, at the very
+  least, so is required for completion of such.
+Given the structure of the final project, natural language processing is
+  optional, so nltk is not *necessarily* required if one only needs an
+  environment for the final project.
+
+-
+
+Working with Python 3.8-updated code:
+
+Given my use of Windows, even after switching to a Python 3.8 version of the 
+  project's code base there are some issues which may or may not be present for
+  those using other OSes.
+Please note that the following issues are rooted in code found "as-is",
+  and that this documentation is provided only as a representation of
+  errors I've encountered which appeared to be caused by code provided
+  by Udacity, or otherwise converted from Python 2.7 compatibility to 3.8
+  compatibility.
+
+-
+
+A multiple-location issue, file encoding treatment and end-of-line sequences
+  for Pickle files results in these errors in any number of scripts where
+  Pickle loads are required:
+	
+  "TypeError: a bytes-like object is required, not 'str'"
+  Fix:
+  For Python 3, the Pickle file should be opened in mode 'rb'.
+	
+  "UnpicklingError: the STRING opcode argument must be quoted"
+  Simple search result:
+    https://stackoverflow.com/questions/45368255/error-in-loading-pickle
+  Fixes:
+    If you're using VSCode, you can open the pickle file in that IDE and change
+      the end-of-line sequence by way of the 'CLRF' tag in the lower right
+      corner. Something similar to this method is possible in many other IDEs.
+    Otherwise, anyone should be able to manually change '\r\n' to '\n' for
+      each line ending via string manipulation prior to passing the data to
+      pickle.load().
+      (this specific method replicates "dos2unix", see page linked above for
+       reference and code examples)
+
+-
+
+In parse_out_email_text.py, some errors are related to functions changing from
+  python 2.7 -> 3:
+  This line, present as-is in the file:
+    text_string = content[1].translate(string.maketrans("", ""), string.punctuation)
+  results in error:
+    AttributeError: module 'string' has no attribute 'maketrans'
+    Simple search result:
+    	https://stackoverflow.com/questions/40770018/python-attributeerror-module-string-has-no-attribute-maketrans
+    Fix:
+      Use str.maketrans() instead:
+        text_string = content[1].translate(str.maketrans("", ""), string.punctuation)
+      results in error:
+        TypeError: translate() takes exactly one argument (2 given)
+        Simple search result:
+          https://stackoverflow.com/questions/40576845/typeerror-translate-takes-exactly-one-argument-2-given
+        Fix:
+          Pass string.punctuation within str.maketrans() as 'z' parameter:
+            text_string = content[1].translate(str.maketrans("", "", string.punctuation))
+  Mapping is then correctly passed, script operates as intended following those
+    changes.
+
+-
+
+In vectorize_text.py, "file not found" error results from this looped line:
+  email = open(path, "r")
+This is due to paths found in from_chris.txt and from_sara.txt being incorrect:
+  Lines like this:
+    maildir/donohoe-t/inbox/253.
+    maildir/germany-c/_sent_mail/1.
+    maildir/germany-c/_sent_mail/10.
+    maildir/germany-c/_sent_mail/100.
+    ...(many, many filenames)
+  Are incorrect, given filenames on those paths named like this:
+    253_
+    1_
+    10_
+    100_
+    ...(many, many files)
+  Accordingly, this issue is fixed easily by updating the paths present
+    in those text files (from_chris.txt and from_sara.txt) by replacing
+    each instance of '.' with '_'.
+
+Another issue within that script, on these lines:
+  pickle.dump( word_data, open("your_word_data.pkl", "w") )
+  pickle.dump( from_data, open("your_email_authors.pkl", "w") )
+results in error:
+  TypeError: write() argument must be str, not bytes
+This is similar to the previously mentioned pickle encoding issue, and
+  is fixed by writing in bytes mode:
+    pickle.dump( word_data, open("your_word_data.pkl", "wb") )
+    pickle.dump( from_data, open("your_email_authors.pkl", "wb") )
+
+-
+
+I'm not 100% certain that no other issues may exist, but those described above
+  are the ones that I've ran into.
